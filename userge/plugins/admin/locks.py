@@ -22,9 +22,7 @@ async def is_admin(message: Message):
         return False
     if user_type == "administrator":
         return True
-    if user_type == "creator":
-        return True
-    return False
+    return user_type == "creator"
 
 
 @userge.on_cmd(
@@ -359,7 +357,7 @@ async def view_perm(message: Message):
     v_perm = await message.client.get_chat(message.chat.id)
 
     def convert_to_emoji(val: bool):
-        if val is True:
+        if val:
             return "✅"
         return "❌"
 

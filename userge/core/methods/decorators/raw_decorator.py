@@ -78,16 +78,19 @@ class RawDecorator(RawClient):
         def decorator(func: _PYROFUNC) -> _PYROFUNC:
             async def template(r_c: Union['_client.Userge', '_client._UsergeBot'],
                                r_m: RawMessage) -> None:
-                if RawClient.DUAL_MODE:
-                    if check_client or (r_m.from_user and r_m.from_user.id in Config.SUDO_USERS):
-                        if Config.USE_USER_FOR_CLIENT_CHECKS:
-                            # pylint: disable=protected-access
-                            if isinstance(r_c, _client._UsergeBot):
-                                return
-                        else:
-                            if r_m.chat.id in await _get_bot_chats(r_c, r_m):
-                                if isinstance(r_c, _client.Userge):
-                                    return
+                if RawClient.DUAL_MODE and (
+                    check_client
+                    or (r_m.from_user and r_m.from_user.id in Config.SUDO_USERS)
+                ):
+                    if Config.USE_USER_FOR_CLIENT_CHECKS:
+                        # pylint: disable=protected-access
+                        if isinstance(r_c, _client._UsergeBot):
+                            return
+                    else:
+                        if r_m.chat.id in await _get_bot_chats(r_c, r_m) and isinstance(
+                            r_c, _client.Userge
+                        ):
+                            return
                 if isinstance(flt, types.raw.Command) and r_m.chat and (r_m.chat.type not in scope):
                     try:
                         _sent = await r_c.send_message(

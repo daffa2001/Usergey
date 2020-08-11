@@ -28,9 +28,10 @@ async def me_can_restrict_members(message: Message, chat_id: int):
     check_user = await message.client.get_chat_member(chat_id, (await message.client.get_me()).id)
     if check_user.status == "creator":
         return True
-    if check_user.status == "administrator" and check_user.can_restrict_members:
-        return True
-    return False
+    return bool(
+        check_user.status == "administrator"
+        and check_user.can_restrict_members
+    )
 
 
 @userge.on_cmd("gban", about={

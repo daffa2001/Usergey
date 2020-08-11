@@ -107,10 +107,7 @@ async def term_(message: Message):
         uid = geteuid()
     except ImportError:
         uid = 1
-    if uid == 0:
-        output = f"{curruser}:~# {cmd}\n"
-    else:
-        output = f"{curruser}:~$ {cmd}\n"
+    output = f"{curruser}:~# {cmd}\n" if uid == 0 else f"{curruser}:~$ {cmd}\n"
     count = 0
     while not t_obj.finished:
         count += 1
